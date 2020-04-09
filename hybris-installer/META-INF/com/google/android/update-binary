@@ -61,7 +61,7 @@ invalid_device && CURRENT_DEVICE=`getprop ro.build.product`
 mount | grep -q "/data.*ext4" || abort 3 "Data is NOT formatted as ext4; check out 'Wipe > Advanced' from TWRP!"
 
 # Treble
-[ -r /dev/block/bootdevice/by-name/vendor ] || abort 4 "A vendor partition doesn't exist"
+[ -r /dev/block/bootdevice/by-name/cust ] || abort 4 "A vendor partition doesn't exist"
 
 # Android
 (mount | grep -q /system || mount /system) || abort 5 "Couldn't mount /system!"
