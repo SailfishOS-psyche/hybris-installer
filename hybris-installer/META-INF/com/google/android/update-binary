@@ -48,7 +48,7 @@ ROOT="/data/.stowaways/sailfishos"
 FORCE_REINSTALL=0
 PARTITION_PREFIX="/dev/block/bootdevice/by-name"
 PARTITION_BOOT="$PARTITION_PREFIX/boot"
-PARTITION_VENDOR="$PARTITION_PREFIX/cust"
+PARTITION_VENDOR="$PARTITION_PREFIX/vendor"
 
 # >>> Sanity checks >>>
 
