@@ -57,13 +57,6 @@ invalid_device && CURRENT_DEVICE=`getprop ro.product.device`
 invalid_device && CURRENT_DEVICE=`getprop ro.build.product`
 [ "$CURRENT_DEVICE" != "$TARGET_DEVICE" ] && abort 7 "This package is for '$TARGET_DEVICE' devices; this is a '$CURRENT_DEVICE'."
 
-# ext4 check for /data (& /cache)
-(mount | grep -q /cache || mount /cache) &&
-	(mount | grep -q "/cache.*ext4" || abort 1 "Cache is NOT formatted as ext4; check out 'Wipe > Advanced' from TWRP!") ||
-	log "Couldn't mount /cache! Is this an A/B device by any chance?"
-(mount | grep -q /data || mount /data) || abort 2 "Couldn't mount /data; running e2fsck and rebooting may help."
-mount | grep -q "/data.*ext4" || abort 3 "Data is NOT formatted as ext4; check out 'Wipe > Advanced' from TWRP!"
-
 # Treble
 [ -r $PARTITION_VENDOR ] || abort 4 "A vendor partition doesn't exist"
 
