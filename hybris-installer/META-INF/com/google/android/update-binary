@@ -48,7 +48,9 @@ ROOT="/data/.stowaways/sailfishos"
 FORCE_REINSTALL=0
 PARTITION_PREFIX="/dev/block/bootdevice/by-name"
 PARTITION_BOOT="$PARTITION_PREFIX/boot"
+PARTITION_DTBO="$PARTITION_PREFIX/dtbo"
 PARTITION_VENDOR="$PARTITION_PREFIX/vendor"
+PARTITION_VENDOR_BOOT="$PARTITION_PREFIX/vendor_boot"
 
 # >>> Sanity checks >>>
 
@@ -157,12 +159,42 @@ elif [ -f /tmp/droid-boot.img ]; then
 	mv /tmp/droid-boot.img $ROOT/boot/
 fi
 
+if [ "$FORCE_REINSTALL" = "0" ]; then
+	log "Backing up droid-dtbo image..."
+	dd if=$PARTITION_DTBO of=$ROOT/boot/droid-dtbo.img bs=4m
+elif [ -f /tmp/droid-dtbo.img ]; then
+	log "Moving back droid-dtbo image..."
+	mv /tmp/droid-dtbo.img $ROOT/boot/
+fi
+
+if [ "$FORCE_REINSTALL" = "0" ]; then
+	log "Backing up droid-dtbo image..."
+	dd if=$PARTITION_VENDOR_BOOT of=$ROOT/boot/droid-vendor_boot.img bs=4m
+elif [ -f /tmp/droid-vendor_boot.img ]; then
+	log "Moving back vendor_boot image..."
+	mv /tmp/droid-vendor_boot.img $ROOT/boot/
+fi
+
 log "Writing hybris-boot image..."
 dd if=$ROOT/boot/hybris-boot.img of=$PARTITION_BOOT bs=4m || abort 11 "Couldn't write Hybris boot image!"
 
 log "Symlinking boot images to /sdcard..."
 ln -s $ROOT/boot/droid-boot.img /sdcard/
 ln -s $ROOT/boot/hybris-boot.img /sdcard/
+
+log "Writing hybris-dtbo image..."
+dd if=$ROOT/boot/dtbo.img of=$PARTITION_DTBO bs=4m || abort 11 "Couldn't write Hybris dtbo image!"
+
+log "Symlinking dtbo images to /sdcard..."
+ln -s $ROOT/boot/droid-dtbo.img /sdcard/
+ln -s $ROOT/boot/dtbo.img /sdcard/hybris-dtbo.img
+
+log "Writing vendor_boot image..."
+dd if=$ROOT/boot/vendor_boot.img of=$PARTITION_VENDOR_BOOT bs=4m || abort 11 "Couldn't write Hybris vendor_boot image!"
+
+log "Symlinking vendor_boot images to /sdcard..."
+ln -s $ROOT/boot/droid-vendor_boot.img /sdcard/
+ln -s $ROOT/boot/vendor_boot.img /sdcard/hybris-vendor_boot.img
 
 # <<< Script <<<
 
